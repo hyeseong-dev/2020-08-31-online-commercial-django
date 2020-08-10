@@ -40,6 +40,10 @@ INSTALLED_APPS = [
 
     'home.apps.HomeConfig',
     'product.apps.ProductConfig',
+
+    'ckeditor',
+    'ckeditor_uploader',
+    'mptt',
 ]
 
 MIDDLEWARE = [
@@ -124,5 +128,21 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'home/static'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+
+##########################
+# CKEDITOR CONFIGURATION #
+##########################
+
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+CKEDITOR_UPLOAD_PATH = 'images/' 
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar':None,
+    },
+} 
