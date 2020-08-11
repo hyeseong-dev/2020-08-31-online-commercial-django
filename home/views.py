@@ -2,9 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
 from home.models import Setting, ContactForm, ContactMessage
+from home.forms import SearchForm
+
 from django.contrib import messages
 from product.models import Category, Product
 from mysite import settings
+
 
 def index(request):
     setting = Setting.objects.get(pk=1)
@@ -55,3 +58,20 @@ def category_products(request,id,slug):
                 'category':category,
                 }
     return render(request, 'category_products.html', context)
+
+def search(request):
+    if request.method == 'POST': # check post
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            query = form.cleaned_data['query'] # get form input data
+            catid = form.cleaned_data['catid']
+            if catid==0:
+                products=Product.objects.filter(title__icontains=query)  #SELECT * FROM product WHERE title LIKE '%query%'
+            else:
+                products = Product.objects.filter(title__icontains=query,category_id=catid)
+
+            category = Category.objects.all()
+            context = {'products': products, 'query':query, 'category': category }
+            return render(request, 'search_products.html', context)
+
+    return HttpResponseRedirect('/')
