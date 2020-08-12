@@ -2,12 +2,13 @@ import json
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 
 from home.models import Setting, ContactForm, ContactMessage
 from home.forms import SearchForm
 
-from django.contrib import messages
-from product.models import Category, Product
+from product.models import Category, Product, Images
+
 from mysite import settings
 
 
@@ -53,11 +54,13 @@ def contactus(request):
 
 
 def category_products(request,id,slug):
-    products = Product.objects.filter(category_id=id)
     category = Category.objects.all()
+    catdata = Category.objects.get(pk=id)
+    products = Product.objects.filter(category_id=id)
     context = {
                 'products':products, 
                 'category':category,
+                'catdata': catdata,
                 }
     return render(request, 'category_products.html', context)
 
@@ -94,3 +97,14 @@ def search_auto(request):
         data = 'fail'
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+def product_detail(request,id,slug):
+    category = Category.objects.all()
+    product = Product.objects.get(pk=id)
+    images = Images.objects.filter(product_id=id)
+    context = {
+                'product':product, 
+                'category':category,
+                'images':images
+                }
+    return render(request, 'product_detail.html', context)
